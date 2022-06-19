@@ -1,0 +1,61 @@
+version: '3.6'
+
+services:
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-13}-alpine
+    container_name: database_letstalk_project
+    environment:
+      - POSTGRES_USER=administrator
+      - POSTGRES_PASSWORD=admin123
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - postgres_data:/lib/postgresql/data/
+    networks:
+      - dev
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_letstalk_project
+    ports:
+      - "5050:80"
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: saadbouh.code@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    volumes:
+      - pgadmin_data:/var/lib/postgresql/data:rw
+    networks:
+      - dev
+
+  maildev:
+    image: maildev/maildev
+    container_name: maildev_letstalk_project
+    command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+    ports:
+      - "8081:80"
+    restart: always
+    networks:
+      - dev
+
+  www:
+    build: php
+    container_name: www_letstalk_project
+    ports:
+      - "8741:80"
+    volumes:
+      - ./php/vhosts:/etc/apache2/sites-enabled
+      - ./:/var/www
+    restart: always
+    networks:
+      - dev
+
+
+networks:
+  dev:
+
+volumes:
+  postgres_data:
+  pgadmin_data:
