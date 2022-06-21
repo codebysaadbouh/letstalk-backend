@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter; // ordonner nos résultats  ("amount" & "sentAt")
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,11 +18,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     collectionOperations={"GET", "POST"},
  *     itemOperations={"GET", "PUT", "DELETE", "PATCH"},
+ *     subresourceOperations={
+ *          "api_categories_articles_get_subresource"={
+ *              "normalization_context"={"groups"={"articles_subresources"}},
+ *     }
+ *     },
+ *     attributes={
+ *          "pagination_enabled"=true,
+ *          "pagination_items_per_page"=25,
+ *          "order"={"createdAt": "desc"}
+ *     },
  *
  *     normalizationContext={
  *          "groups"={"articles_read"}
  *     }
  * )
+ * @ApiFilter(SearchFilter::class, properties={"title": "partial", "description": "partial"})
  */
 class Article
 {
@@ -26,54 +41,55 @@ class Article
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $isPublished;
 
