@@ -206,6 +206,21 @@ class Article
         return $this;
     }
 
+
+    public function setCreatedAt(?\DateTime $createdAt) : self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function setUpdatedAt(?\DateTime $updatedAt) : self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Category>
      */
