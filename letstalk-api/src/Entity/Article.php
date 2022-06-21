@@ -6,12 +6,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter; // ordonner nos résultats  ("amount" & "sentAt")
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Gedmo\Mapping\Annotation as Gedmo;
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
@@ -21,17 +23,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     subresourceOperations={
  *          "api_categories_articles_get_subresource"={
  *              "normalization_context"={"groups"={"articles_subresources"}},
- *     }
+ *          }
  *     },
  *     attributes={
  *          "pagination_enabled"=true,
  *          "pagination_items_per_page"=25,
  *          "order"={"createdAt": "desc"}
  *     },
- *
  *     normalizationContext={
  *          "groups"={"articles_read"}
- *     }
+ *     },
+ *     denormalizationContext={"disable_type_enforcement"=true}
  * )
  * @ApiFilter(SearchFilter::class, properties={"title": "partial", "description": "partial"})
  */
@@ -48,18 +50,24 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Assert\NotBlank(message="Le titre est obligatoire")
+     * @Assert\Length(min=2, minMessage="Le titre doit faire au moins 2 caractères")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Assert\NotBlank(message="La description est obligatoire")
+     * @Assert\Length(min=5, minMessage="La description doit faire au moins 5 caractères")
      */
     private $description;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Assert\NotBlank(message="Le contenu est obligatoire")
+     * @Assert\Length(min=50, minMessage="Le contenu doit faire au moins 50 caractères")
      */
     private $content;
 
@@ -70,12 +78,14 @@ class Article
     private $image;
 
     /**
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $createdAt;
 
     /**
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
      * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
@@ -84,12 +94,15 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Assert\NotBlank(message="L'auteur est obligatoire")
      */
     private $author;
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Assert\NotBlank(message="Le statut est obligatoire")
+     * @Assert\Type(type="bool", message="La valeur doit être un booléen")
      */
     private $isPublished;
 
@@ -162,23 +175,11 @@ class Article
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
-        return $this;
-    }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     public function getAuthor(): ?string

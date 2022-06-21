@@ -12,6 +12,8 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -23,7 +25,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     },
  *     normalizationContext={
  *          "groups"={"categories_read"}
- *     }
+ *     },
+ *     denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class Category
@@ -39,6 +42,8 @@ class Category
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"categories_read", "articles_read"})
+     * @Assert\NotBlank(message="Le titre est obligatoire")
+     * @Assert\Length(min=2, minMessage="Le titre doit faire au moins 2 caractères")
      */
     private $name;
 
@@ -50,12 +55,14 @@ class Category
     private $article;
 
     /**
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      * @Groups({"categories_read", "articles_read"})
      */
     private $createdAt;
 
     /**
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
      * @Groups({"categories_read" ,"articles_read"})
      */
@@ -122,22 +129,10 @@ class Category
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
 }
