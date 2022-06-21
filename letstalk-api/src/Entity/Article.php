@@ -91,12 +91,6 @@ class Article
      */
     private $updatedAt;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
-     * @Assert\NotBlank(message="L'auteur est obligatoire")
-     */
-    private $author;
 
     /**
      * @ORM\Column(type="boolean")
@@ -111,6 +105,11 @@ class Article
      * @Groups({"articles_read"})
      */
     private $categories;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
+     */
+    private $usercreator;
 
     public function __construct()
     {
@@ -182,17 +181,7 @@ class Article
         return $this->updatedAt;
     }
 
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
 
-    public function setAuthor(string $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
 
     public function isIsPublished(): ?bool
     {
@@ -244,6 +233,18 @@ class Article
         if ($this->categories->removeElement($category)) {
             $category->removeArticle($this);
         }
+
+        return $this;
+    }
+
+    public function getUsercreator(): ?User
+    {
+        return $this->usercreator;
+    }
+
+    public function setUsercreator(?User $usercreator): self
+    {
+        $this->usercreator = $usercreator;
 
         return $this;
     }
