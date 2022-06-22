@@ -23,7 +23,7 @@ services:
       - "5050:80"
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: saadbouh.code@gmail.com
+      PGADMIN_DEFAULT_EMAIL: bayoadama.9@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin123
     volumes:
       - pgadmin_data:/var/lib/postgresql/data:rw

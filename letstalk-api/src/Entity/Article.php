@@ -111,9 +111,15 @@ class Article
      */
     private $usercreator;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Event::class, mappedBy="article")
+     */
+    private $events;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -245,6 +251,36 @@ class Article
     public function setUsercreator(?User $usercreator): self
     {
         $this->usercreator = $usercreator;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getArticle() === $this) {
+                $event->setArticle(null);
+            }
+        }
 
         return $this;
     }
