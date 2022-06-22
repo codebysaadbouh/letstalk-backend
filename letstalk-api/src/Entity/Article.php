@@ -43,13 +43,13 @@ class Article
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
      * @Assert\NotBlank(message="Le titre est obligatoire")
      * @Assert\Length(min=2, minMessage="Le titre doit faire au moins 2 caractères")
      */
@@ -57,7 +57,7 @@ class Article
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
      * @Assert\NotBlank(message="La description est obligatoire")
      * @Assert\Length(min=5, minMessage="La description doit faire au moins 5 caractères")
      */
@@ -65,7 +65,7 @@ class Article
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
      * @Assert\NotBlank(message="Le contenu est obligatoire")
      * @Assert\Length(min=50, minMessage="Le contenu doit faire au moins 50 caractères")
      */
@@ -73,28 +73,28 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
      */
     private $image;
 
     /**
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
      */
     private $createdAt;
 
     /**
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
      */
     private $updatedAt;
 
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
      * @Assert\NotBlank(message="Le statut est obligatoire")
      * @Assert\Type(type="bool", message="La valeur doit être un booléen")
      */
@@ -102,7 +102,7 @@ class Article
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, mappedBy="article")
-     * @Groups({"articles_read"})
+     * @Groups({"articles_read" })
      */
     private $categories;
 
