@@ -40,19 +40,6 @@ services:
     networks:
       - dev
 
-  www:
-    build: php
-    container_name: www_letstalk_project
-    ports:
-      - "8741:80"
-    volumes:
-      - ./php/vhosts:/etc/apache2/sites-enabled
-      - ./:/var/www
-    restart: always
-    networks:
-      - dev
-
-
 networks:
   dev:
 
