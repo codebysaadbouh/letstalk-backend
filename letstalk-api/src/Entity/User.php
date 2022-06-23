@@ -17,17 +17,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "get",
- *         "post"={"security"="is_granted('ROLE_USER')"}
- *     },
- *     itemOperations={
- *         "get",
- *         "put"={"security"="is_granted('ROLE_USER') or object.owner == user"},
- *     },
  *     normalizationContext={
- *     "groups"={"user_read"}
+ *          "groups"={"user_read"}
  *     },
  * )
  * @UniqueEntity("email", message="Cette adresse email est déjà utilisée")

@@ -2,11 +2,25 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\EventRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=EventRepository::class)
+ * @ApiResource(
+ *     collectionOperations={"GET", "POST"},
+ *     itemOperations={"GET", "PUT", "DELETE", "PATCH"},
+ *     subresourceOperations={
+ *          "api_articles_events_get_subresource"={
+ *              "normalization_context"={"groups"={"events_subresources"}},
+ *          },
+ *     },
+ *     normalizationContext={
+ *          "groups"={"event_read"}
+ *      },
+ * )
  */
 class Event
 {
@@ -14,46 +28,55 @@ class Event
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"event_read", "events_subresources"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"event_read", "events_subresources"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"event_read", "events_subresources"})
      */
     private $theme;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"event_read", "events_subresources"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"event_read", "events_subresources"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"event_read", "events_subresources"})
      */
     private $postalCode;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"event_read", "events_subresources"})
      */
     private $eventAt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"event_read", "events_subresources"})
      */
     private $poster;
 
     /**
      * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="events")
+     * @Groups({"event_read"})
      */
     private $article;
 

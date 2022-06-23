@@ -9,6 +9,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Gedmo\Mapping\Annotation as Gedmo;
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     subresourceOperations={
  *          "api_categories_articles_get_subresource"={
  *              "normalization_context"={"groups"={"articles_subresources"}},
- *          }
+ *          },
+ *           "events_get_subresource"={"path"="/articles/{id}/events"},
  *     },
  *     attributes={
  *          "pagination_enabled"=true,
@@ -43,13 +45,13 @@ class Article
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"articles_read", "categories_read", "articles_subresources" })
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"articles_read", "categories_read", "articles_subresources" })
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      * @Assert\NotBlank(message="Le titre est obligatoire")
      * @Assert\Length(min=2, minMessage="Le titre doit faire au moins 2 caractères")
      */
@@ -57,7 +59,7 @@ class Article
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"articles_read", "categories_read", "articles_subresources" })
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
      * @Assert\NotBlank(message="La description est obligatoire")
      * @Assert\Length(min=5, minMessage="La description doit faire au moins 5 caractères")
      */
@@ -102,17 +104,21 @@ class Article
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, mappedBy="article")
-     * @Groups({"articles_read" })
+     * @Groups({"articles_read", "articles_subresources" })
      */
     private $categories;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
+     * @Groups({"articles_read", "categories_read", "articles_subresources"})
+     * @Assert\NotBlank(message="L'auteur est obligatoire")
      */
     private $usercreator;
 
     /**
      * @ORM\OneToMany(targetEntity=Event::class, mappedBy="article")
+     * @Groups({"articles_read", "categories_read", "articles_subresources" })
+     * @ApiSubresource
      */
     private $events;
 
@@ -120,6 +126,16 @@ class Article
     {
         $this->categories = new ArrayCollection();
         $this->events = new ArrayCollection();
+    }
+
+    /**
+     * Permet de récupérer le nombre d'evenements dans l'article
+     * @Groups({"articles_read"})
+     * @return int|null
+     */
+    public function getNbEvents(): ?int {
+        $events = $this->events->toArray();
+        return  count($events);
     }
 
     public function getId(): ?int
