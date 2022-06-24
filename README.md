@@ -19,10 +19,34 @@ ____
   ```
   
 -  Connect application with server : 
-    - Create .env.local file on letstalk-api repertory
-   
-        ```
-        touch .env.local
-        ```
+    - Create .env.local file on letstalk-api repertory and paste this code :
         
-   - 
+        ```yaml
+        ###> doctrine/doctrine-bundle ###
+        DATABASE_URL="postgresql://administrator:admin123@127.0.0.1:5432/letstalk-database?charset=utf8"
+        ###< doctrine/doctrine-bundle ###
+        ###> symfony/mailer ###
+        MAILER_DSN=smtp://maildev_docker_symfony:25
+        ###< symfony/mailer ###
+        ```
+ - Create database and migrate tables (Require [symfony cli](https://symfony.com/downloads))
+    
+    - Create database
+    
+         ```
+         symfony console doctrine:database:create
+         ```
+     - Migrate database
+    
+         ```
+         symfony console doctrine:migrations:migrate
+         ```
+  - Load the fixtures :
+
+    ```
+    symfony console doctrine:fixtures:load
+    ```
+   
+   
+   
+   
