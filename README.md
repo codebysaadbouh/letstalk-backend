@@ -5,6 +5,24 @@ ____
 > ### `version: 1.0` 
 > 
 > **Stacks :** `Symfony` - `API Platform` - `Postgresql` - `Docker`
-> 
 
+## Run server
 
+- Open repertory of project on terminal and run command (install docker services) : 
+  ```
+  docker-compose up -d
+  ```
+  
+- Open letstalk-api repertory on terminal and run command (install dependencies): 
+  ```
+  composer install
+  ```
+  
+-  Connect application with server : 
+    - Create .env.local file on letstalk-api repertory
+   
+        ```
+        touch .env.local
+        ```
+        
+   - 
